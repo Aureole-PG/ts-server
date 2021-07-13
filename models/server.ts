@@ -1,6 +1,7 @@
 import express,{Application} from 'express';
 import userRoutes from '../routes/users';
 import cors from 'cors';
+import { db } from '../db/connection';
 class Server {
     private app: Application;
     private port: string;
@@ -10,14 +11,23 @@ class Server {
     constructor() {
         this.app= express();
         this.port = process.env.PORT || "3000";
-        this.middleWares()
-        this.routers()
+        this.dbConection();
+        this.middleWares();
+        this.routers();
     }
 
     routers(){
         this.app.use(this.apiPaths.users, userRoutes)
     }
 
+    async dbConection(){
+        try {
+            await db.authenticate()
+        } catch (error) {
+            throw new Error(error);
+            
+        }
+    }
     middleWares(){
         this.app.use(cors());
         this.app.use(express.json());

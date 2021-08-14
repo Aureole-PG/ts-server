@@ -7,6 +7,7 @@ import {
   postUser,
   putUser,
 } from "../controllers/user";
+import { rolValid, validEmail } from "../helpers/dbValidators";
 import { validateValues } from "../middlewares/validator";
 
 const router = Router();
@@ -17,9 +18,9 @@ router.post(
   "/",
   [
     check("name", "Invalid name").not().isEmpty(),
-    check("email", "Invalid email").isEmail(),
+    check("email", "Invalid email").isEmail().custom(validEmail),
     check("password", "Min length is 6").isLength({ min: 6 }),
-    check("rol", "Rol not exist").isIn(["seller", "user", "admin"]),
+    check("rol", "Rol not exist").custom(rolValid),
     validateValues,
   ],
   postUser

@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-enum rol {
+export enum rol {
   "seller",
   "user",
   "admin",
@@ -23,4 +23,9 @@ const userSchema = new Schema<user>({
   state: { type: Boolean, default: true },
   google: { type: Boolean, default: false },
 });
+
+userSchema.methods.toJSON = function () {
+  const { __v, password, ...user } = this.toObject();
+  return user;
+};
 export const UserModel = model<user>("Users", userSchema);

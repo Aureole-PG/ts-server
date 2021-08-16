@@ -7,7 +7,7 @@ import {
   postUser,
   putUser,
 } from "../controllers/user";
-import { rolValid, validEmail } from "../helpers/dbValidators";
+import { existUserId, rolValid, validEmail } from "../helpers/dbValidators";
 import { validateValues } from "../middlewares/validator";
 
 const router = Router();
@@ -25,7 +25,16 @@ router.post(
   ],
   postUser
 );
-router.put("/:id", putUser);
+router.put(
+  "/:id",
+  [
+    check("id", "Invalid Id").isMongoId(),
+    check("id", "User not found").custom(existUserId),
+    check("rol", "Rol not exist").custom(rolValid),
+    validateValues,
+  ],
+  putUser
+);
 router.delete("/", deleteUser);
 
 export default router;

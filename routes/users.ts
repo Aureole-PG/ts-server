@@ -35,6 +35,13 @@ router.put(
   ],
   putUser
 );
-router.delete("/", deleteUser);
+router.delete(
+  "/:id",
+  [
+    check("id", "Invalid Id").isMongoId(),
+    check("id", "User not found").custom(existUserId),
+  ],
+  deleteUser
+);
 
 export default router;

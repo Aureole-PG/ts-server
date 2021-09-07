@@ -52,7 +52,7 @@ export const postUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(404).json({
       msg: "Please talk with admin",
-      ...error,
+      error,
     });
   }
 };
@@ -78,7 +78,9 @@ export const putUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = "await User.findByPk(id)";
+  const user = await UserModel.findByIdAndUpdate(id.toString(), {
+    state: false,
+  });
   if (!user) {
     res.status(404).json({
       msg: "User not exist",

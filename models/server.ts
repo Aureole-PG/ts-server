@@ -1,12 +1,14 @@
 import express, { Application } from "express";
 import userRoutes from "../routes/users";
 import { dbConection } from "../db/connection";
+import authRoutes from "../routes/auth";
 import cors from "cors";
 class Server {
   private app: Application;
   private port: string;
   private apiPaths = {
     users: "/api/users",
+    auth: "/api/auth",
   };
   constructor() {
     this.app = express();
@@ -18,6 +20,7 @@ class Server {
 
   routers() {
     this.app.use(this.apiPaths.users, userRoutes);
+    this.app.use(this.apiPaths.auth, authRoutes);
   }
   async conection() {
     await dbConection();

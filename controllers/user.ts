@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user";
 import bcrypt from "bcryptjs";
-import { validationResult } from "express-validator";
 export const getUsers = async (req: Request, res: Response) => {
   const { limit = 5, page = 0 } = req.query;
   const page_aux = Number(page) * Number(limit);
@@ -31,11 +30,6 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const postUser = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json(errors);
-      return;
-    }
     const { name, email, password } = req.body;
     const existEmail = await UserModel.findOne({ email });
     if (existEmail) {
